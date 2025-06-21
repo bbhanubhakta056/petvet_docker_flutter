@@ -1,4 +1,4 @@
-version: '3.9'
+
 
 services:
   flutter_web:
@@ -10,8 +10,7 @@ services:
     working_dir: /app
     stdin_open: true
     tty: true
-    depends_on:
-      - backend
+    command: flutter run -d web-server --web-hostname=0.0.0.0 --web-port=5555
 
   backend:
     build: ./backend
