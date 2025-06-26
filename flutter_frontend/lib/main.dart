@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_frontend/widgets/home/getStart.dart';
+import 'package:flutter_frontend/widgets/auth/login.dart';
+import 'package:flutter_frontend/widgets/auth/register.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  Future<String> fetchMessage() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/hello'));
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['message'];
-    } else {
-      throw Exception('Failed to load message');
-    }
-  }
-
+  const MyApp({super.key});
+// Main entry point of the application
+  // This widget is the root of your application.
+  // It sets up the MaterialApp and defines the routes.
+  // It also sets the theme and initial route for the app.
+  // The app starts with the GetStart widget, which is the initial screen.
+  // The app uses a Material Design theme with a primary color of blue.
+  // The app has routes defined for login and register pages.
+  // The GetStart widget is the first screen that users see when they open the app.
+  
   @override
   Widget build(BuildContext context) {
+    // bool isDesktop = MediaQuery.of(context).size.width > 600;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'My App',
       theme : ThemeData(
         // 🌈 Primary App Colors
         primaryColor: Colors.blue,
@@ -26,141 +31,28 @@ class MyApp extends StatelessWidget {
           primary: Colors.blue,
           secondary: Colors.deepOrangeAccent,
         ),
-      ),
-      home: Scaffold(
-        appBar: AppBar(title: Text("KMS")),
-        body: FutureBuilder<String>(
-          future: fetchMessage(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              // return Center(child: Text(snapshot.data ?? 'No message'));
-              return SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // Header
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.pets, color: Colors.orange, size: 36),
-                            const SizedBox(width: 10),
-                            Text(
-                              'PetCare Manager',
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Hero Section
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          children: [
-                            Image.asset('images/logo.png', height: 200),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Manage Your Pets with Ease',
-                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Track health, appointments, and more — all in one place!',
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Navigate to register/login
-                              },
-                              child: Text('Get Started'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ]
-                  )
-                ),
-              );
-              // return Column(
-              //   children: [
-              //     // Header
-              //     Container(
-              //       padding:  EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              //       color: Colors.white,
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Text(
-              //             'YourLogo',
-              //             style: TextStyle(
-              //               fontSize: 24,
-              //               fontWeight: FontWeight.bold,
-              //               color: Colors.blue,
-              //             ),
-              //           ),
-              //           Row(
-              //             children: [
-              //               TextButton(
-              //                 onPressed: () {},
-              //                 child:  Text('Login'),
-              //               ),
-              //               SizedBox(width: 12),
-              //               ElevatedButton(
-              //                 onPressed: () {},
-              //                 style: ElevatedButton.styleFrom(
-              //                   backgroundColor: Colors.blue,
-              //                 ),
-              //                 child:  Text('Register'),
-              //               ),
-              //             ],
-              //           ),
-              //         ],
-              //       ),
-              //     ),
+      ), 
+      
+      // Define the routes for the app
+      // 🌐 Initial Route
+      // This is the first screen that will be displayed when the app starts.
+      initialRoute: '/', 
+      // 📍 Routes Map
+      // This map defines the available routes in the app.
 
-              //     // Body
-              //     Expanded(
-              //       child: Center(
-              //         child: Padding(
-              //           padding: EdgeInsets.symmetric(horizontal: 24),
-              //           child: Column(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             children: [
-              //               Text(
-              //                 'Welcome to Our Platform',
-              //                 style: TextStyle(
-              //                   fontSize: 32,
-              //                   fontWeight: FontWeight.bold,
-              //                   color: Colors.black87,
-              //                 ),
-              //                 textAlign: TextAlign.center,
-              //               ),
-              //               SizedBox(height: 20),
-              //               Text(
-              //                 'We provide an easy way to access our services.\nLogin if you already have an account or register to get started.',
-              //                 style: TextStyle(
-              //                   fontSize: 16,
-              //                   color: Colors.black54,
-              //                 ),
-              //                 textAlign: TextAlign.center,
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // );
-            }
-          },
-        ),
-      ),
+      routes: {
+        '/': (context) => GetStart(), // - '/': The initial screen (GetStart widget)
+        '/login': (context) => Login(), // - '/login': The login screen (Login widget)
+
+        // - The routes can be accessed using Navigator.pushNamed(context, '/register');
+        '/register': (context) => Register(), // - '/register': The registration screen (Register widget)
+
+        // - Additional routes can be added as needed for other features like home, settings, profile, etc.
+        // uncomment the following lines to add more routes
+
+        // '/settings': (context) => Settings(), // - '/settings': The settings screen (Settings widget)
+        // '/profile': (context) => Profile(), // - '/profile': The user profile screen (Profile widget)
+      },
     );
   }
 }
