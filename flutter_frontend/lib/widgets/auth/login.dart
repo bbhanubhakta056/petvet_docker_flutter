@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 
+
 class Login extends StatelessWidget {
   const Login({super.key});
 
@@ -20,9 +21,9 @@ class Login extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               // Navigate to register page
-              Navigator.pushNamed(context, '/register');
+              Navigator.pushNamed(context, '/dashboard');
             },
-            child: Text('Go to Register'),
+            child: Text('Login to Dashboard'),
           ),
         ],
       ),

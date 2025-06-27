@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
+// import 'dart:convert';
 import 'package:flutter_frontend/widgets/home/getStart.dart';
 import 'package:flutter_frontend/widgets/auth/login.dart';
 import 'package:flutter_frontend/widgets/auth/register.dart';
+import 'package:flutter_frontend/widgets/home/dashboard.dart';
 
 void main() => runApp(MyApp());
 
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
 
         // - The routes can be accessed using Navigator.pushNamed(context, '/register');
         '/register': (context) => Register(), // - '/register': The registration screen (Register widget)
-
+        '/dashboard': (context) => DashboardPage(), // - '/dashboard': The dashboard screen (DashboardPage widget)  
         // - Additional routes can be added as needed for other features like home, settings, profile, etc.
         // uncomment the following lines to add more routes
 
