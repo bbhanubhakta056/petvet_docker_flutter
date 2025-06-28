@@ -119,7 +119,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 title: const Text('Add New Pet'),
                 onTap: () {
                   // Navigate to add pet screen
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/addPet');
                 },
               ),
             ],
@@ -167,6 +167,14 @@ class _DashboardPageState extends State<DashboardPage> {
             onTap: () {
               // Navigate to settings screen
               Navigator.pop(context);
+            },
+          ),
+            ListTile(
+            leading: const Icon(Icons.logout_sharp),
+            title: const Text('Log Out'),
+            onTap: () {
+              // Navigate to settings screen
+              Navigator.pushNamed( context, '/');
             },
           ),
         ],
@@ -220,11 +228,13 @@ class _DashboardPageState extends State<DashboardPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildStatCard('Pets', '3', Icons.pets, Colors.blue),
-        _buildStatCard('Appointments', '2', Icons.calendar_today, Colors.green),
-        _buildStatCard(
-            'Medications', '1', Icons.medical_services, Colors.orange),
-        _buildStatCard('Vaccinations', '1', Icons.local_hospital, Colors.red),
+        Expanded(child: _buildStatCard('Pets', '3', Icons.pets, Colors.blue)),
+        Expanded(child: _buildStatCard('Appointments', '2', Icons.calendar_today, Colors.green)),
+        Expanded(
+          child: _buildStatCard(
+              'Medications', '1', Icons.medical_services, Colors.orange),
+        ),
+        Expanded(child: _buildStatCard('Vaccinations', '1', Icons.local_hospital, Colors.red)),
       ],
     );
   }
@@ -283,31 +293,31 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildActivitiesList() {
-    return Card(
+    return const Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(8),
         child: Column(
           children: [
             ListTile(
-              leading: const Icon(Icons.medical_services, color: Colors.orange),
-              title: const Text('Medication given to Charlie'),
-              subtitle: const Text('Today, 8:00 AM - Flea treatment'),
-              trailing: const Text('1h ago'),
+              leading: Icon(Icons.medical_services, color: Colors.orange),
+              title: Text('Medication given to Charlie'),
+              subtitle: Text('Today, 8:00 AM - Flea treatment'),
+              trailing: Text('1h ago'),
             ),
-            const Divider(),
+            Divider(),
             ListTile(
-              leading: const Icon(Icons.local_dining, color: Colors.purple),
-              title: const Text('Fed Luna'),
-              subtitle: const Text('Today, 7:30 AM - Dry food 1 cup'),
-              trailing: const Text('2h ago'),
+              leading: Icon(Icons.local_dining, color: Colors.purple),
+              title: Text('Fed Luna'),
+              subtitle: Text('Today, 7:30 AM - Dry food 1 cup'),
+              trailing: Text('2h ago'),
             ),
-            const Divider(),
+            Divider(),
             ListTile(
               // leading: const Icon(Icons.walk, color: Colors.teal),
-              title: const Text('Walked Max'),
-              subtitle: const Text('Yesterday, 6:00 PM - 30 minutes'),
-              trailing: const Text('1d ago'),
+              title: Text('Walked Max'),
+              subtitle: Text('Yesterday, 6:00 PM - 30 minutes'),
+              trailing: Text('1d ago'),
             ),
           ],
         ),
