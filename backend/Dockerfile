@@ -1,15 +1,17 @@
+# backend/Dockerfile
 FROM node:18
 
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy package.json before rest (for Docker cache)
-COPY package.json ./
+# Copy only package.json first
+COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm install
 
-# Now copy the rest of the app
-COPY . .
-
+# Expose port (match with server.js)
 EXPOSE 3000
-CMD ["node", "index.js"]
+
+# Start with nodemon for hot reload
+CMD ["npm", "run", "dev"]

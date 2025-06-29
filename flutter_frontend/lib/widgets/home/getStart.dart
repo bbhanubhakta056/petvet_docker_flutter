@@ -9,7 +9,7 @@ class GetStart extends StatelessWidget {
   Widget build(BuildContext context) {
     // Function to fetch message from the server
     Future<String> fetchMessage() async {
-      final response = await http.get(Uri.parse('http://localhost:3000/api/hello'));
+      final response = await http.get(Uri.parse('http://localhost:3000/'));
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body)['message'];

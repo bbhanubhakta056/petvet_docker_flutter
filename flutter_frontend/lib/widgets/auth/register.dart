@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -10,7 +12,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-   final _phoneController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -23,7 +25,54 @@ class _RegisterState extends State<Register> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _phoneController.dispose();
     super.dispose();
+  }
+
+  String message = '';
+
+// This function handles user registration by sending a POST request to the backend
+  Future<void> registerUser() async {
+    final url = Uri.parse('http://localhost:3000/api/users'); // Adjust the URL as needed
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': _nameController.text,
+        'email': _emailController.text,
+        'phone': _phoneController.text,
+        'password': _passwordController.text,
+      }),
+    );
+
+    final resBody = jsonDecode(response.body);
+
+    if (response.statusCode == 201) {
+      setState(() {
+        message = resBody['message'] ?? 'Registration successful';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(resBody['message']),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+      // Navigate to login page after successful registration
+      Navigator.pushNamed(context, '/login');
+    } else {
+      setState(() {
+        message = resBody['message'] ?? 'Registration failed';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(resBody['message']),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -75,25 +124,25 @@ class _RegisterState extends State<Register> {
                     },
                   ),
                   const SizedBox(height: 20),
-              TextFormField(
-                controller: _phoneController,
-                decoration: const InputDecoration(
-                  labelText: 'Phone Number',
-                  prefixIcon: Icon(Icons.phone),
-                  hintText: 'Enter with country code',
-                ),
-                keyboardType: TextInputType.phone,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your phone number';
-                  }
-                  // Basic phone number validation (adjust regex as needed)
-                  if (!RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$').hasMatch(value)) {
-                    return 'Please enter a valid phone number';
-                  }
-                  return null;
-                },
-              ),
+                  TextFormField(
+                    controller: _phoneController,
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                      prefixIcon: Icon(Icons.phone),
+                      hintText: 'Enter with country code',
+                    ),
+                    keyboardType: TextInputType.phone,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
+                      // Basic phone number validation (adjust regex as needed)
+                      if (!RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$').hasMatch(value)) {
+                        return 'Please enter a valid phone number';
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _emailController,
@@ -171,14 +220,10 @@ class _RegisterState extends State<Register> {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // Form is valid, proceed with registration
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
-                        // Here you would typically send data to your backend
-                        print('Name: ${_nameController.text}');
-                        print('Email: ${_emailController.text}');
+                      // Check if the form is valid before proceeding
+                      if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+                        // If the form is valid, proceed with registration
+                        registerUser();
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -192,6 +237,8 @@ class _RegisterState extends State<Register> {
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
+                  // const SizedBox(height: 20),
+                  // Text(message),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
