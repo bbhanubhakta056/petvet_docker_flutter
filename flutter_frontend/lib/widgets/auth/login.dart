@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    final url = Uri.parse('http://localhost:3000/api/users/auth/login');
+    final url = Uri.parse('http://localhost:3000/api/user/auth/login');
 
     if (_formKey.currentState!.validate()) {
       // Simulate a login process
@@ -46,9 +46,12 @@ class _LoginScreenState extends State<LoginScreen> {
         }),
       );
 
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
       final resBody = jsonDecode(response.body);
       // Check if login was successful
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -242,8 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(8),
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            // Login logic here
-                            Navigator.pushNamed(context, '/dashboard');
+                            _login();
                           }
                         },
                         child: const Center(

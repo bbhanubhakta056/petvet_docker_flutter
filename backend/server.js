@@ -17,7 +17,8 @@ app.use(express.json());
 app.use(cors());
 
 //routes 
-app.use('/api/users', require('./src/routes/userRoute'));
+app.use('/api/user', require('./src/routes/userRoute'));
+app.use('/api/pets', require('./src/routes/petRoute'));
 // Add other routes as needed
 // Example: app.use('/api/anotherRoute', require('./src/routes/anotherRoute'));
 

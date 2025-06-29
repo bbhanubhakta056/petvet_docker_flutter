@@ -37,6 +37,7 @@ const createUser = async (req, res) => {
 const authenticateUser = async (req, res) => {
   try {
     const { username, password } = req.body;
+    console.log('Authenticating user:', username);
     const user = await User.findOne({ username, password });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });

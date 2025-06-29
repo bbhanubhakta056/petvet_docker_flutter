@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class PetRegistrationScreen extends StatefulWidget {
   const PetRegistrationScreen({super.key});
@@ -44,13 +46,60 @@ class _PetRegistrationScreenState extends State<PetRegistrationScreen> {
     }
   }
 
+  String message = '';
+  // This function handles user registration by sending a POST request to the backend
+  Future<void> addPet() async {
+    final url = Uri.parse('http://localhost:3000/api/pets'); // Adjust the URL as needed
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': _petNameController.text,
+        'age': _ageController.text,
+        'species': _petType,
+        'breed': _breedController.text,
+        'gender': _gender
+      }),
+    );
+
+    final resBody = jsonDecode(response.body);
+
+    if (response.statusCode == 201) {
+      setState(() {
+        message = resBody['message'] ?? 'Pet Added Successfully';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(resBody['message']),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+      // Navigate to login page after successful registration
+      // Navigator.pushNamed(context, '/dashboard');
+    } else {
+      setState(() {
+        message = resBody['message'] ?? 'Unable to add pet';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(resBody['message']),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register New Pet'),
         centerTitle: true,
-      ),
+      ),  
       body: Center(
         child: Container(
           height: 600,
@@ -252,13 +301,16 @@ class _PetRegistrationScreenState extends State<PetRegistrationScreen> {
                           'isVaccinated': _isVaccinated,
                           'isNeutered': _isNeutered,
                         };
+
+                        // Call the addPet function to send data to the backend
+                        addPet();
                         
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${_petNameController.text} registered successfully!'),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(
+                        //     content: Text('${_petNameController.text} registered successfully!'),
+                        //     duration: const Duration(seconds: 2),
+                        //   ),
+                        // );
                         
                         // Here you would typically save to database
                         print(newPet);
