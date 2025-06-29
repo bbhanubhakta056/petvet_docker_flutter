@@ -293,7 +293,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildActivitiesList() {
-    return const Card(
+    return Card(
       elevation: 4,
       child: Padding(
         padding: EdgeInsets.all(8),
