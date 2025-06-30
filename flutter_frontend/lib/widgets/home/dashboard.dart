@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_frontend/src/models/pet.dart';
+import 'package:flutter_frontend/src/data_layer/api/pet_api.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -13,6 +14,12 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   int _currentIndex = 0;
   String _selectedPet = 'All Pets';
+
+  @override
+  void initState() {
+    super.initState();
+    futurePets = _apiService.fetchPets();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -341,61 +348,77 @@ class _DashboardPageState extends State<DashboardPage> {
     return pets;
   }
 
+  late Future<List<Pet>> futurePets;
+  final PetApiService _apiService = PetApiService();
+
   // This function fetches the list of pets from the backend
   // It returns a Future that resolves to a list of Pet objects
   Widget _buildPetsContent() {
-    return FutureBuilder<List<Pet>>(
-      future: fetchPets(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Error: ${snapshot.error}'),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        futurePets = _apiService.fetchPets();
-                      });
-                    },
-                    child: Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No pets found.'));
-        } else {
-          final pets = snapshot.data!;
-          return ListView.builder(
-            itemCount: pets.length,
-            itemBuilder: (context, index) {
-              final pet = pets[index];
-              return ListTile(
-                leading: 
-                // pet.imageUrl.isNotEmpty
-                //       ? CircleAvatar(
-                //           backgroundImage: NetworkImage(pet.imageUrl),
-                //         ) :
-                      CircleAvatar(
-                          child: Icon(Icons.pets),
-                        ),
-                title: Text(pet.name),
-                subtitle: Text('${pet.species} - ${pet.breed}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {
-                    // Handle more options
-                  },
+    return RefreshIndicator(
+      onRefresh: () async {
+        setState((){
+          futurePets = _apiService.fetchPets();
+        });
+      },
+      child: FutureBuilder<List<Pet>>(
+        future: fetchPets(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Error: ${snapshot.error}'),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          futurePets = _apiService.fetchPets();
+                        });
+                      },
+                      child: Text('Retry'),
+                    ),
+                  ],
                 ),
               );
-            },
-          );
-        }
-      },
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No pets found.'));
+          } else {
+            final pets = snapshot.data!;
+            return ListView.builder(
+              itemCount: pets.length,
+              itemBuilder: (context, index) {
+                final pet = pets[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                            child: Icon(Icons.pets),
+                          ),
+                  title: // Health status pulse animation
+                  PulseAnimation(
+                    child: HealthStatusIndicator(
+                      status: 100,
+                      size: 24,
+                    ),
+                  ),
+                  subtitle: Text('${pet.species} - ${pet.breed}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {
+                      // Handle more options
+                    },
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _selectedPet = pet.name;
+                    });
+                  },
+                );
+              },
+            );
+          }
+        },
+      )
     );
   }
 
