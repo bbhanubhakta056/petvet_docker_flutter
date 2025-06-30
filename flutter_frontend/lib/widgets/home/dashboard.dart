@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_frontend/src/models/pet.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -325,9 +328,74 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
+  Future<List<Pet>> fetchPets() async {
+    final url = Uri.parse('http://localhost:3000/api/pets'); // Adjust the URL as needed
+    // Mocked data for demonstration purposes
+    final response = await http.get(url);
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load pets');
+    }
+    // Parse the response body
+    final List<dynamic> jsonResponse = jsonDecode(response.body);
+    List<Pet> pets = jsonResponse.map((pet) => Pet.fromJson(pet)).toList();
+    return pets;
+  }
+
+  // This function fetches the list of pets from the backend
+  // It returns a Future that resolves to a list of Pet objects
   Widget _buildPetsContent() {
-    return Center(
-      child: Text('Pets Content for $_selectedPet'),
+    return FutureBuilder<List<Pet>>(
+      future: fetchPets(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Error: ${snapshot.error}'),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        futurePets = _apiService.fetchPets();
+                      });
+                    },
+                    child: Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No pets found.'));
+        } else {
+          final pets = snapshot.data!;
+          return ListView.builder(
+            itemCount: pets.length,
+            itemBuilder: (context, index) {
+              final pet = pets[index];
+              return ListTile(
+                leading: 
+                // pet.imageUrl.isNotEmpty
+                //       ? CircleAvatar(
+                //           backgroundImage: NetworkImage(pet.imageUrl),
+                //         ) :
+                      CircleAvatar(
+                          child: Icon(Icons.pets),
+                        ),
+                title: Text(pet.name),
+                subtitle: Text('${pet.species} - ${pet.breed}'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () {
+                    // Handle more options
+                  },
+                ),
+              );
+            },
+          );
+        }
+      },
     );
   }
 
