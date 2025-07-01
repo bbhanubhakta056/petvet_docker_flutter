@@ -4,9 +4,10 @@ import 'package:flutter_frontend/widgets/home/getStart.dart';
 import 'package:flutter_frontend/widgets/auth/login.dart';
 import 'package:flutter_frontend/widgets/auth/register.dart';
 import 'package:flutter_frontend/widgets/home/dashboard.dart';
+import 'package:flutter_frontend/widgets/home/petDetails.dart';
 import 'package:flutter_frontend/widgets/pet/addPet.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -43,13 +44,21 @@ class MyApp extends StatelessWidget {
       // This map defines the available routes in the app.
 
       routes: {
-        '/': (context) => GetStart(), // - '/': The initial screen (GetStart widget)
-        '/login': (context) => LoginScreen(), // - '/login': The login screen (Login widget)
+        '/': (context) => const GetStart(), // - '/': The initial screen (GetStart widget)
+        '/login': (context) => const LoginScreen(), // - '/login': The login screen (Login widget)
+
+        '/petDetails': (context) {
+          // - '/petDetails': The pet details screen (PetPortfolioPage widget)
+          // This route can be used to display details of a specific pet.
+          // It can accept arguments to pass the pet data to the PetPortfolioPage.
+          final pet = ModalRoute.of(context)?.settings.arguments;
+          return PetPortfolioPage();
+        },
 
         // - The routes can be accessed using Navigator.pushNamed(context, '/register');
-        '/register': (context) => Register(), // - '/register': The registration screen (Register widget)
-        '/dashboard': (context) => DashboardPage(), // - '/dashboard': The dashboard screen (DashboardPage widget)  
-        '/addPet': (context) => PetRegistrationScreen(), // - '/addPet': The pet registration screen (PetRegistrationScreen widget)   
+        '/register': (context) => const Register(), // - '/register': The registration screen (Register widget)
+        '/dashboard': (context) => const DashboardPage(), // - '/dashboard': The dashboard screen (DashboardPage widget)  
+        '/addPet': (context) => const PetRegistrationScreen(), // - '/addPet': The pet registration screen (PetRegistrationScreen widget)   
         // - Additional routes can be added as needed for other features like home, settings, profile, etc.
         // uncomment the following lines to add more routes
 
