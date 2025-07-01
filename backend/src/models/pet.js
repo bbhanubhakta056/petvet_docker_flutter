@@ -20,6 +20,12 @@ const PetSchema = new mongoose.Schema({
     gender: {
         type: String,
     },
+    color: {
+        type: String,
+    },
+    weight: {
+        type: Number,
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

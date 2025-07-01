@@ -6,6 +6,8 @@ class Pet {
     final String color;
     final String gender;
     final String owner;
+    final String imageUrl;
+    final String healthStatus;
 
     Pet({
         required this.name,
@@ -15,6 +17,8 @@ class Pet {
         required this.color,
         required this.gender,
         required this.owner,
+        required this.imageUrl,
+        required this.healthStatus,
     });
 
     // Factory constructor to create a Pet instance from JSON
@@ -29,6 +33,8 @@ class Pet {
             color: json['color'] ?? '', // Default to empty string if color is null
             gender: json['gender'] ?? '', // Default
             owner: json['owner'] ?? '', // Default to empty string if owner is null
+            imageUrl: json['imageUrl'] ?? '', // Default to empty string if imageUrl is null
+            healthStatus: json['healthStatus'] ?? '', // Default to
         );
     }
     
@@ -42,6 +48,8 @@ class Pet {
     //         'color': color,
     //         'gender': gender,
     //         'owner': owner,
+    //         'imageUrl': imageUrl,
+    //         'healthStatus': healthStatus.toJson(), // Convert HealthStatus to JSON
     //     };
     // }
     // @override

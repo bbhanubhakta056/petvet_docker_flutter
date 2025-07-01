@@ -15,6 +15,9 @@ class _DashboardPageState extends State<DashboardPage> {
   int _currentIndex = 0;
   String _selectedPet = 'All Pets';
 
+  late Future<List<Pet>> futurePets;
+  final PetApiService _apiService = PetApiService();
+
   @override
   void initState() {
     super.initState();
@@ -336,7 +339,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<List<Pet>> fetchPets() async {
-    final url = Uri.parse('http://localhost:3000/api/pets'); // Adjust the URL as needed
+    final url = Uri.parse('http://192.168.1.77:3000/api/pets'); // Adjust the URL as needed
     // Mocked data for demonstration purposes
     final response = await http.get(url);
     if (response.statusCode != 200) {
@@ -348,8 +351,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return pets;
   }
 
-  late Future<List<Pet>> futurePets;
-  final PetApiService _apiService = PetApiService();
+  
 
   // This function fetches the list of pets from the backend
   // It returns a Future that resolves to a list of Pet objects
@@ -394,13 +396,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   leading: CircleAvatar(
                             child: Icon(Icons.pets),
                           ),
-                  title: // Health status pulse animation
-                  PulseAnimation(
-                    child: HealthStatusIndicator(
-                      status: 100,
-                      size: 24,
-                    ),
-                  ),
+                  title: Text(pet.name),
                   subtitle: Text('${pet.species} - ${pet.breed}'),
                   trailing: IconButton(
                     icon: const Icon(Icons.more_vert),

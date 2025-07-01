@@ -49,7 +49,7 @@ class _PetRegistrationScreenState extends State<PetRegistrationScreen> {
   String message = '';
   // This function handles user registration by sending a POST request to the backend
   Future<void> addPet() async {
-    final url = Uri.parse('http://localhost:3000/api/pets'); // Adjust the URL as needed
+    final url = Uri.parse('http://192.168.1.77:3000/api/pets'); // Adjust the URL as needed
 
     final response = await http.post(
       url,
