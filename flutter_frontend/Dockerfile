@@ -1,5 +1,5 @@
 # Use official Flutter image
-FROM cirrusci/flutter:stable
+FROM ghcr.io/cirruslabs/flutter:3.22.0
 
 # Set working directory inside container
 WORKDIR /app

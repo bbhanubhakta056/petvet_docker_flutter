@@ -1,6 +1,8 @@
 # Git
 .git/
 
+.env
+
 # Node.js (if frontend/backend uses Node)
 node_modules/
 

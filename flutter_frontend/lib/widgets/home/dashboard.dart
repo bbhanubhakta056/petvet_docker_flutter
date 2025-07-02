@@ -5,6 +5,7 @@ import 'package:flutter_frontend/src/data_layer/api/pet_api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_frontend/src/models/pet.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import dotenv for environment variables
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -26,6 +27,22 @@ class _DashboardPageState extends State<DashboardPage> {
     // Initialize any data or state here if needed
     futurePets = _apiService.fetchPets();
   }
+
+  // void  fetchPets() async {
+  //   try{
+  //     // futurePets = _apiService.fetchPets();
+  //     final pets = _apiService.fetchPets();
+  //     setState(() {
+  //       futurePets =  pets;
+  //     });
+  //   } catch (e) {
+  //     print('Error fetching pets: $e');
+  //     // Handle error appropriately, e.g., show a snackbar or dialog
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Failed to load pets: $e')),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -342,18 +359,19 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Future<List<Pet>> fetchPets() async {
-    final url = Uri.parse('http://192.168.1.77:3000/api/pets'); // Adjust the URL as needed
-    // Mocked data for demonstration purposes
-    final response = await http.get(url);
-    if (response.statusCode != 200) {
-      throw Exception('Failed to load pets');
-    }
-    // Parse the response body
-    final List<dynamic> jsonResponse = jsonDecode(response.body);
-    List<Pet> pets = jsonResponse.map((pet) => Pet.fromJson(pet)).toList();
-    return pets;
-  }
+  // Future<List<Pet>> fetchPets() async {
+  //   final String baseUrl = dotenv.env['BASE_URI'] ?? '';
+  //   final registerUrl = Uri.parse('${baseUrl}/api/pets'); // Adjust the URL as needed
+  //   // Mocked data for demonstration purposes
+  //   final response = await http.get(registerUrl);
+  //   if (response.statusCode != 200) {
+  //     throw Exception('Failed to load pets');
+  //   }
+  //   // Parse the response body
+  //   final List<dynamic> jsonResponse = jsonDecode(response.body);
+  //   List<Pet> pets = jsonResponse.map((pet) => Pet.fromJson(pet)).toList();
+  //   return pets;
+  // }
 
   
 
@@ -362,7 +380,8 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildPetsContent() {
     return FutureBuilder<List<Pet>>(
 
-      future: fetchPets(),
+      future: futurePets, // Use the futurePets variable to fetch pets
+      // future: _apiService.fetchPets(), // Fetch pets from the API
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -407,7 +426,6 @@ class _DashboardPageState extends State<DashboardPage> {
                         const CircleAvatar(
                             child: Icon(Icons.pets),
                           ),
-                  title: Text(pet.name),
                   title: Text(pet.name),
                   subtitle: Text('${pet.species} - ${pet.breed}'),
                   trailing: IconButton(

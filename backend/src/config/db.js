@@ -10,7 +10,7 @@ const connectDB = async () => {
   try {
     // Read MongoDB URI from environment variable or use default
     // This allows for flexibility in different environments (development, production, etc.)
-    const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/petvet';
+    const mongoURI = process.env.MONGO_URI || 'mongodb://mongo:27017/petvet';
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,

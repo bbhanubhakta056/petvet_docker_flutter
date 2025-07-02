@@ -20,6 +20,7 @@ class _GetStartState extends State<GetStart> {
   void initState() {
     super.initState();
     fetchMessage = _apiService.fetchMessage();
+    _apiService.logUrl(); // Log the API URL for debugging
   }
 
   @override

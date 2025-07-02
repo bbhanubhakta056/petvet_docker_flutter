@@ -6,8 +6,16 @@ import 'package:flutter_frontend/widgets/auth/register.dart';
 import 'package:flutter_frontend/widgets/home/dashboard.dart';
 import 'package:flutter_frontend/widgets/home/petDetails.dart';
 import 'package:flutter_frontend/widgets/pet/addPet.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_frontend/src/data_layer/api/api.dart'; // Import the API service
 
-void main() => runApp(const MyApp());
+void main() async {
+  print('App started');
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env"); 
+  
+  runApp(const MyApp());// Load environment variables from .env file
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

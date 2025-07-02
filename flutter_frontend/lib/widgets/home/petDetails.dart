@@ -218,7 +218,7 @@ class _PetPortfolioPageState extends State<PetPortfolioPage> {
                   _getHealthColor(healthScore),
                 ),
                 minHeight: 12,
-                borderRadius: BorderRadius.circular(6),
+                // borderRadius: BorderRadius.circular(6),
               ),
               SizedBox(height: 10),
               Row(
