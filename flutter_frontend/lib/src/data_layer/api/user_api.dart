@@ -9,7 +9,7 @@ void logToBrowserConsole(String message) {
 }
 
 class UserApiService {
-    final String _baseUrl = dotenv.env['BASE_URI'] ?? 'sdfdsf'; // Use dotenv to get the base URL from .env file
+    final String _baseUrl = dotenv.env['BASE_URI'] ?? 'http://192.168.100.160:3000'; // Use dotenv to get the base URL from .env file
     void logUrl() {
       print('API URL: $_baseUrl');
     } // Debugging line to check the base URL

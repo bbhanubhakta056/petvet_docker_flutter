@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import dotenv for environment variables
+import 'package:flutter_frontend/src/data_layer/api/pet_api.dart'; // Import the PetApiService
+import 'package:flutter_frontend/src/models/pet.dart'; // Import the Pet model
 
 class PetRegistrationScreen extends StatefulWidget {
   const PetRegistrationScreen({super.key});
@@ -22,6 +25,44 @@ class _PetRegistrationScreenState extends State<PetRegistrationScreen> {
   bool _isNeutered = false;
   DateTime? _birthDate;
 
+  final PetApiService _apiService = PetApiService(); // Assuming you have a PetApiService class for API calls
+
+  void _addPet() async {
+    if (_formKey.currentState!.validate()) {
+      final newPet = Pet(
+        name: _petNameController.text ?? '',
+        age: int.tryParse(_ageController.text) ?? 0,
+        species: _petType ?? 'Dog', // Default to Dog if not specified
+        breed: _breedController.text ?? '',
+        color: _colorPatternController.text ?? '',
+        gender: _gender,
+        owner: '686168049886733ca6ad6a23', // Replace with actual user ID or logic to get current
+        imageUrl: 'defaultForNow', // Add logic to handle image upload if needed
+        healthStatus: 'healthy', // Default health status, can be modified
+      );
+
+      try {
+        await _apiService.addPet(newPet); // Call the API service to add the pet
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${_petNameController.text} registered successfully!'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        // Optionally, navigate to another screen or reset the form
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to register pet: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  
   @override
   void dispose() {
     _petNameController.dispose();
@@ -48,8 +89,13 @@ class _PetRegistrationScreenState extends State<PetRegistrationScreen> {
 
   String message = '';
   // This function handles user registration by sending a POST request to the backend
-  Future<void> addPet() async {
-    final url = Uri.parse('http://192.168.1.77:3000/api/pets'); // Adjust the URL as needed
+  Future<void> addPetss() async {
+    final String _baseUrl = dotenv.env['BASE_URI'] ?? 'http://localhost:3000'; // Use dotenv to get the base URL from .env file
+    
+    final String _petsEndpoint = '$_baseUrl/api/pets'; // Use dotenv to get the base URL from .env file
+
+    final url = Uri.parse(_petsEndpoint); // Adjust the URL as needed
+    // print('URL: $url'); // Debugging line to check the URL
 
     final response = await http.post(
       url,
@@ -303,7 +349,7 @@ class _PetRegistrationScreenState extends State<PetRegistrationScreen> {
                         };
 
                         // Call the addPet function to send data to the backend
-                        addPet();
+                        _addPet();
                         
                         // ScaffoldMessenger.of(context).showSnackBar(
                         //   SnackBar(

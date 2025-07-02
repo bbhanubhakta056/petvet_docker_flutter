@@ -38,20 +38,21 @@ class Pet {
         );
     }
     
-    // // Method to convert a Pet instance to JSON
-    // Map<String, dynamic> toJson() {
-    //     return {
-    //         'name': name,
-    //         'age': age,
-    //         'species': species,
-    //         'breed': breed,
-    //         'color': color,
-    //         'gender': gender,
-    //         'owner': owner,
-    //         'imageUrl': imageUrl,
-    //         'healthStatus': healthStatus.toJson(), // Convert HealthStatus to JSON
-    //     };
-    // }
+    // Method to convert a Pet instance to JSON
+    Map<String, dynamic> toJson() {
+        return {
+            'name': name,
+            'age': age,
+            'species': species,
+            'breed': breed,
+            'color': color,
+            'gender': gender,
+            'owner': owner,
+            'imageUrl': imageUrl,
+            'healthStatus': healthStatus, // Convert HealthStatus to JSON
+        };
+    }
+    
     // @override
     // String toString() {
     //     return 'Pet{name: $name, age: $age, species: $species, breed: $breed, color: $color, gender: $gender, owner: $owner}';
@@ -66,4 +67,6 @@ class Pet {
     // bool isDog() {
     //     return species.toLowerCase() == 'dog';
     // }
+
+
 }

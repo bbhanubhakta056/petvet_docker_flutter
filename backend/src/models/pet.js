@@ -27,8 +27,7 @@ const PetSchema = new mongoose.Schema({
         type: Number,
     },
     owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        type: String,
         // required: true,
     },
     medicalHistory: [{
